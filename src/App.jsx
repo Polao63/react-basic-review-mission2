@@ -1,120 +1,68 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import reactData from "./data/data.json";
+import StudyList from './components/StudyList';
+
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  
+  console.log(reactData);
+
+  const [selectedId,setSelectedId] = useState(null);
+  const [category,setCategory] = useState("all");
+  const [keyword, setKeyword] = useState("");
+
+
+  const handleSelect = (id) => {
+    setSelectedId(id);
+  }
+
+  const filteredData = reactData.filter((item)=>{
+    const isCategoryMatch = (category === "all" || item.category === category);
+    const isKeywordMatch = (keyword === "" || item.title.toLowerCase().includes(keyword.toLowerCase()));
+
+    return isCategoryMatch && isKeywordMatch;
+  })
+
+
+
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      <h1>React Basic Review Mission 2</h1>
+      <h2>전체 학습 항목 수 : {reactData.length}개</h2>
+      <hr />
+      <h2>카테고리 필터</h2>
+      <button 
+        type="button" 
+        onClick={() => setCategory("all")}
+      >전체</button>
+      <button 
+        type="button" 
+        onClick={() => setCategory("concept")}
+      >concept</button>
+      <button 
+        type="button" 
+        onClick={() => setCategory("library")}
+      >library</button>
+      <button 
+        type="button" 
+        onClick={() => setCategory("hook")}
+      >hook</button>
+      <hr />
+      <h2>검색</h2>
+      <input type="text" 
+        value={keyword}
+        onChange={(e)=>{
+          console.log(e.target.value);
+          setKeyword(e.target.value);
+        }} />
+      <h2>학습 목록</h2>
+      <StudyList 
+        items={filteredData}
+        selectedId={selectedId}
+        onSelect={handleSelect}
+      />
     </>
   )
 }
